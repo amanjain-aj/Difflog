@@ -100,31 +100,23 @@ export default async function HomePage() {
             <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 text-xs font-medium text-indigo-700 dark:text-indigo-300">
               <Sparkles className="h-3.5 w-3.5" />
               <span>
-                Automated OpenAPI Changelog &amp; Breaking Change Detector
+                The API Release Communication Platform
               </span>
             </div>
 
             <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white sm:text-6xl leading-[1.12]">
-              Turn every OpenAPI commit into a{" "}
-              <span className="bg-gradient-to-r from-indigo-600 via-sky-600 to-emerald-600 dark:from-indigo-400 dark:via-sky-400 dark:to-emerald-400 bg-clip-text text-transparent">
-                Stripe-grade public changelog
-              </span>
-              .
+              Never ship silent{" "}
+              <span className="bg-gradient-to-r from-rose-600 via-indigo-600 to-sky-600 dark:from-rose-400 dark:via-indigo-400 dark:to-sky-400 bg-clip-text text-transparent">
+                breaking API changes
+              </span>{" "}
+              again.
             </h1>
 
             <p className="mt-6 text-base leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-lg">
-              Whenever your team merges changes to{" "}
-              <code className="rounded bg-zinc-200/80 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-sm text-zinc-900 dark:text-zinc-200">
-                openapi.yaml
-              </code>
-              , DiffLog automatically diffs the old and new schema in GitHub
-              Actions, flags{" "}
-              <strong className="font-semibold text-rose-600 dark:text-rose-400">
-                [BREAKING]
-              </strong>{" "}
-              contract changes with 100% deterministic accuracy, writes crisp
-              developer release notes, and updates your public changelog portal
-              &amp; RSS feed in 15 seconds.
+              DiffLog is the release communication platform for high-velocity API teams.
+              We mathematically diff schema changes in CI, flag breaking contract mutations
+              with verified migration guides, and instantly publish a Stripe-grade public
+              changelog with RSS feeds &amp; Slack alerts—so your partner integrations never break.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -132,7 +124,7 @@ export default async function HomePage() {
                 href="/register"
                 className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-indigo-500 transition-colors"
               >
-                <span>Start Automating Your Changelog</span>
+                <span>Start Protecting Your API Releases</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -606,7 +598,7 @@ export default async function HomePage() {
             <span className="font-semibold text-zinc-900 dark:text-white">
               DiffLog
             </span>
-            <span>— Automated OpenAPI Changelogs from Git.</span>
+            <span>— The Stripe-grade API release communication platform.</span>
           </div>
           <div className="flex items-center gap-5">
             <Link

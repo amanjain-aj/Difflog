@@ -1,20 +1,22 @@
 # DiffLog (`difflog.dev`)
 
-> **"Stripe-grade API changelogs, generated deterministically from your Git commits and OpenAPI schemas."**
+> **"The API Release Communication Platform — Never ship silent breaking API changes again."**
 
 ---
 
 ## 1. Project Brief
 
 ### The Problem
-Engineering teams deploy frequent backend and OpenAPI schema changes. Release notes either lag weeks behind—silently breaking partner integrations—or developers waste hours manually drafting Markdown release notes after every sprint.
+Engineering teams deploy frequent backend and OpenAPI schema changes. Release notes either lag weeks behind—silently breaking partner integrations and causing expensive production fire drills—or developers waste hours manually drafting release notes after every sprint.
 
-### The Solution
-**DiffLog** is an automated API Changelog & Documentation Sync Platform. It pairs a zero-config **GitHub Composite Action** that runs deterministic OpenAPI diffing via `oasdiff` in CI, securely dispatches the structured diff to a serverless **Next.js 14+ (App Router)** backend, generates developer-focused summaries using **Structured AI with Strict JSON Schema enforcement**, and immediately publishes updates to a hosted public changelog portal (`/{slug}`) complete with semantic impact badges (`[BREAKING]`, `[NEW]`, `[CHANGED]`, `[DEPRECATED]`), **RSS/Atom XML feeds**, and **Slack/Discord alert webhooks**.
+### The Solution (USP)
+**DiffLog** is not just a diff tool—it is the complete **API Release Communication Platform**. It pairs a zero-config **GitHub Composite Action** that runs deterministic schema diffing via `oasdiff` in CI, securely dispatches the diff to a serverless backend, generates developer-focused migration guides using **Structured AI**, and immediately publishes updates to a branded, hosted public changelog portal (`/{slug}`) complete with semantic impact badges (`[BREAKING]`, `[NEW]`, `[CHANGED]`, `[DEPRECATED]`), **RSS/Atom XML feeds**, and **Slack/Discord alert webhooks**.
 
-### Key Features
-- **100% Deterministic Schema Diffing:** Uses `oasdiff breaking` and `oasdiff changelog` inside GitHub Actions runners so breaking changes are never missed or hallucinated.
-- **Zero-Hallucination Structured AI Summarizer:** Enforces a strict JSON Schema contract (`CHANGELOG_PROMPT` + `JSON_SCHEMA`) requiring a live backend key (`GROQ_API_KEY`).
+### Key Features & Value Proposition
+- **Guaranteed Breaking Change Prevention:** Catches removed fields, new required headers, and status code changes deterministically via `oasdiff` before partner integrations fail.
+- **Zero-Hallucination Structured AI Summarizer:** Generates clear migration guides explaining *why* the change happened and *how* partner developers should adapt.
+- **Stripe-Grade Hosted Developer Portal (`/[slug]`):** Instant public status and release website with route-level search, semantic filters, and raw schema diff inspection.
+- **Automated Developer Feeds & Webhooks:** Standards-compliant RSS/Atom feeds (`/[slug]/rss.xml`) and Slack/Discord webhook broadcasts.
 - **Dual-Mode Database Persistence:** Production-ready **Supabase PostgreSQL** schema with Row-Level Security (RLS) and indexes, paired with an automatic **local persistent JSON store** (`.data/specsync-db.json`) so the app runs out-of-the-box locally.
 - **Hosted Public Changelog Portal (`/[slug]`):** Server-side rendered developer portal with endpoint search, semantic tag filters, breaking change warning banners, and an expandable raw `oasdiff` JSON inspector.
 - **Public Developer Feeds (`/[slug]/rss.xml` & `/[slug]/feed.xml`):** Standards-compliant RSS 2.0 XML feeds for feed readers and Slack/Discord RSS integrations.

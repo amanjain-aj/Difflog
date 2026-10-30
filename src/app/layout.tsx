@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DiffLog (difflog.dev) — Automated OpenAPI Changelogs & Doc Sync",
+  title: "DiffLog (difflog.dev) — The API Release Communication Platform",
   description:
-    "Stripe-grade API changelogs, generated deterministically from your Git commits and OpenAPI schemas via oasdiff and structured AI completions.",
+    "Never ship silent breaking API changes again. DiffLog automatically diffs schemas in CI, alerts on breaking contract mutations, and publishes Stripe-grade changelogs with RSS feeds.",
 };
 
 export default function RootLayout({
