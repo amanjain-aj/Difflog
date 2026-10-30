@@ -187,7 +187,7 @@ export function PublicPortalClient({
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300">
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>Deterministic oasdiff + Structured Groq LPU Release Notes</span>
+                <span>Deterministic oasdiff + Structured AI Release Notes</span>
               </div>
               <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 {project.name} Changelog

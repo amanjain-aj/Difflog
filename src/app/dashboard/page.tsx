@@ -232,7 +232,7 @@ jobs:
             <span className="h-6 w-px bg-zinc-800" />
             <div>
               <div className="text-xs text-zinc-400">
-                Groq Summarizer Status
+                AI Summarizer Status
               </div>
               <div
                 className={`font-mono text-xs ${
@@ -240,7 +240,7 @@ jobs:
                 }`}
               >
                 {groqConfigured
-                  ? "Live GROQ_API_KEY Active"
+                  ? "Live AI Engine Active"
                   : "Requires GROQ_API_KEY in .env.local for /api/v1/ingest"}
               </div>
             </div>
@@ -251,7 +251,7 @@ jobs:
             className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500 transition-colors"
           >
             <Sparkles className="h-4 w-4" />
-            <span>Test Live Groq Ingestion</span>
+            <span>Test Live AI Ingestion</span>
           </Link>
         </div>
 

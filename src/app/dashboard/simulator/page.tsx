@@ -174,7 +174,7 @@ export default function CiIngestionSimulatorPage() {
             <span>GitHub Action Runner → POST /api/v1/ingest</span>
           </div>
           <h1 className="mt-3 text-2xl font-bold text-white">
-            CI OpenAPI Diff & Live Groq Ingestion Simulator
+            CI OpenAPI Diff & Live AI Ingestion Simulator
           </h1>
           <p className="mt-1 max-w-3xl text-sm text-zinc-400">
             Simulate the exact payload dispatched by{" "}
@@ -288,8 +288,8 @@ export default function CiIngestionSimulatorPage() {
               <Play className="h-4 w-4" />
               <span>
                 {submitting
-                  ? "Running Groq LPU Structured Schema Summarizer..."
-                  : "POST /api/v1/ingest (Live Groq Summarization)"}
+                  ? "Running Structured AI Schema Summarizer..."
+                  : "POST /api/v1/ingest (Live AI Summarization)"}
               </span>
             </button>
           </form>
@@ -371,9 +371,9 @@ export default function CiIngestionSimulatorPage() {
                 <code className="font-mono text-zinc-200">
                   projects.api_key_hash
                 </code>
-                , checks organization quota, and enforces Groq JSON Object mode
-                with strict schema validation so the model can never hallucinate
-                fields or invalid change tags.
+                , checks organization quota, and enforces strict JSON Schema validation
+                with our AI summarizer so the model can never hallucinate fields or invalid
+                change tags.
               </p>
             </div>
           </div>

@@ -10,11 +10,11 @@
 Engineering teams deploy frequent backend and OpenAPI schema changes. Release notes either lag weeks behind—silently breaking partner integrations—or developers waste hours manually drafting Markdown release notes after every sprint.
 
 ### The Solution
-**DiffLog** is an automated API Changelog & Documentation Sync Platform. It pairs a zero-config **GitHub Composite Action** that runs deterministic OpenAPI diffing via `oasdiff` in CI, securely dispatches the structured diff to a serverless **Next.js 14+ (App Router)** backend, generates developer-focused summaries using **Groq LPU Inference (`llama-3.3-70b-versatile`) with Strict JSON Schema enforcement**, and immediately publishes updates to a hosted public changelog portal (`/{slug}`) complete with semantic impact badges (`[BREAKING]`, `[NEW]`, `[CHANGED]`, `[DEPRECATED]`), **RSS/Atom XML feeds**, and **Slack/Discord alert webhooks**.
+**DiffLog** is an automated API Changelog & Documentation Sync Platform. It pairs a zero-config **GitHub Composite Action** that runs deterministic OpenAPI diffing via `oasdiff` in CI, securely dispatches the structured diff to a serverless **Next.js 14+ (App Router)** backend, generates developer-focused summaries using **Structured AI with Strict JSON Schema enforcement**, and immediately publishes updates to a hosted public changelog portal (`/{slug}`) complete with semantic impact badges (`[BREAKING]`, `[NEW]`, `[CHANGED]`, `[DEPRECATED]`), **RSS/Atom XML feeds**, and **Slack/Discord alert webhooks**.
 
 ### Key Features
 - **100% Deterministic Schema Diffing:** Uses `oasdiff breaking` and `oasdiff changelog` inside GitHub Actions runners so breaking changes are never missed or hallucinated.
-- **Zero-Hallucination Groq LLM Summarizer:** Enforces a strict JSON Schema contract (`CHANGELOG_PROMPT` + `JSON_SCHEMA`) via Groq (`https://api.groq.com/openai/v1`) requiring a live `GROQ_API_KEY`.
+- **Zero-Hallucination Structured AI Summarizer:** Enforces a strict JSON Schema contract (`CHANGELOG_PROMPT` + `JSON_SCHEMA`) requiring a live backend key (`GROQ_API_KEY`).
 - **Dual-Mode Database Persistence:** Production-ready **Supabase PostgreSQL** schema with Row-Level Security (RLS) and indexes, paired with an automatic **local persistent JSON store** (`.data/specsync-db.json`) so the app runs out-of-the-box locally.
 - **Hosted Public Changelog Portal (`/[slug]`):** Server-side rendered developer portal with endpoint search, semantic tag filters, breaking change warning banners, and an expandable raw `oasdiff` JSON inspector.
 - **Public Developer Feeds (`/[slug]/rss.xml` & `/[slug]/feed.xml`):** Standards-compliant RSS 2.0 XML feeds for feed readers and Slack/Discord RSS integrations.
@@ -55,13 +55,13 @@ elegant-curie/
 │   │   ├── dashboard/
 │   │   │   ├── page.tsx                    # Customer Admin Portal (Projects, API Keys, Markdown Editor)
 │   │   │   ├── simulator/
-│   │   │   │   └── page.tsx                # Interactive CI Diff & Live Groq Ingestion Simulator
+│   │   │   │   └── page.tsx                # Interactive CI Diff & Live AI Ingestion Simulator
 │   │   │   └── billing/
 │   │   │       └── page.tsx                # Stripe Billing & Founding Member Plan selector
 │   │   └── api/
 │   │       ├── v1/
 │   │       │   └── ingest/
-│   │       │       └── route.ts            # POST /api/v1/ingest (Bearer Auth + Groq JSON Schema)
+│   │       │       └── route.ts            # POST /api/v1/ingest (Bearer Auth + Strict AI JSON Schema)
 │   │       ├── projects/
 │   │       │   ├── route.ts                # GET/POST projects & rotate SHA-256 API keys
 │   │       │   └── [id]/entries/
@@ -86,7 +86,7 @@ elegant-curie/
 │       │   ├── supabase.ts                 # Supabase service-role client initialization
 │       │   └── index.ts                    # Unified data access layer (Supabase + Local JSON fallback)
 │       ├── llm/
-│       │   └── summarizer.ts               # Groq LPU Structured Output client, CHANGELOG_PROMPT & JSON_SCHEMA
+│       │   └── summarizer.ts               # Structured AI Output client, CHANGELOG_PROMPT & JSON_SCHEMA
 │       ├── webhooks/
 │       │   └── dispatcher.ts               # Slack & Discord release notification webhook sender
 │       ├── rss.ts                          # RSS 2.0 XML builder shared by /rss.xml and /feed.xml

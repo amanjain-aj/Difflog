@@ -25,7 +25,7 @@ export const SPECSYNC_PLANS: PricingPlanInfo[] = [
       "Up to 3 API Projects & Public Portals",
       "Unlimited GitHub Action oasdiff runs",
       "Deterministic Breaking Change Detection",
-      "Groq LPU (Llama 3.3 70B) Structured Summarization",
+      "Structured AI Release Summarization",
       "Hosted Public RSS & Atom XML Feeds",
       "Direct access to Founding Member Slack channel",
     ],

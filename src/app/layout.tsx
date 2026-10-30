@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "DiffLog (difflog.dev) — Automated OpenAPI Changelogs & Doc Sync",
   description:
-    "Stripe-grade API changelogs, generated deterministically from your Git commits and OpenAPI schemas via oasdiff and Groq LPU structured completions.",
+    "Stripe-grade API changelogs, generated deterministically from your Git commits and OpenAPI schemas via oasdiff and structured AI completions.",
 };
 
 export default function RootLayout({

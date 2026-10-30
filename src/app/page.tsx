@@ -227,7 +227,7 @@ export default async function HomePage() {
                     became required.
                   </p>
                   <p>
-                    2. Groq LPU formats the structured JSON diff into a
+                    2. Structured AI formats the schema diff into a
                     developer-ready release note with zero hallucinated routes.
                   </p>
                 </div>
@@ -363,7 +363,7 @@ export default async function HomePage() {
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                 DiffLog sends the mathematical schema diff and Git commit
-                message to Groq LPU with a strict JSON Schema contract. It
+                message to our Structured AI Engine with a strict JSON Schema contract. It
                 writes human-friendly migration advice and classifies every
                 route as <code className="font-mono">[BREAKING]</code>,{" "}
                 <code className="font-mono">[NEW]</code>,{" "}
@@ -572,7 +572,7 @@ export default async function HomePage() {
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>Groq LPU Structured Release Summarization</span>
+                <span>Structured AI Release Summarization</span>
               </li>
               <li className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
