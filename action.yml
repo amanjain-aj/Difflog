@@ -1,0 +1,62 @@
+name: "DiffLog OpenAPI Diff & Changelog"
+description: "Detects OpenAPI schema differences via oasdiff and sends them to DiffLog."
+inputs:
+  api_key:
+    description: "DiffLog Project API Key"
+    required: true
+  spec_path:
+    description: "Path to openapi.yaml or openapi.json"
+    required: true
+    default: "openapi.yaml"
+  version_tag:
+    description: "Optional release or semver tag"
+    required: false
+    default: ""
+  api_url:
+    description: "DiffLog Ingestion Endpoint URL"
+    required: false
+    default: "https://api.difflog.dev/api/v1/ingest"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go for oasdiff
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    - name: Install oasdiff
+      shell: bash
+      run: |
+        go install github.com/tufin/oasdiff@latest
+
+    - name: Extract Previous Spec
+      shell: bash
+      run: |
+        git fetch origin ${{ github.event.before }} --depth=1 || true
+        git show ${{ github.event.before }}:${{ inputs.spec_path }} > /tmp/base_spec.yaml 2>/dev/null || echo "{}" > /tmp/base_spec.yaml
+
+    - name: Run Schema Diff
+      id: diff_step
+      shell: bash
+      run: |
+        # Generate breaking changes check
+        oasdiff breaking /tmp/base_spec.yaml ${{ inputs.spec_path }} --format json > /tmp/breaking.json || true
+        # Generate full changelog diff
+        oasdiff changelog /tmp/base_spec.yaml ${{ inputs.spec_path }} --format json > /tmp/diff.json || true
+
+    - name: Dispatch to DiffLog Engine
+      shell: bash
+      run: |
+        curl -X POST ${{ inputs.api_url }} \
+          -H "Authorization: Bearer ${{ inputs.api_key }}" \
+          -H "Content-Type: application/json" \
+          -d @- <<EOF
+        {
+          "commit_hash": "${{ github.sha }}",
+          "commit_message": $(echo "${{ github.event.head_commit.message }}" | jq -sR .),
+          "version_tag": "${{ inputs.version_tag }}",
+          "diff": $(cat /tmp/diff.json),
+          "breaking": $(cat /tmp/breaking.json)
+        }
+        EOF

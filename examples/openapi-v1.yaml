@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: Acme Payments API
+  version: 2026.09.01
+  description: Core payment processing, refunds, and webhook event management API.
+servers:
+  - url: https://api.acmepayments.dev
+paths:
+  /v1/payments:
+    post:
+      summary: Create a payment intent
+      operationId: createPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+              properties:
+                amount:
+                  type: integer
+                  description: Amount in smallest currency unit (e.g., cents).
+                currency:
+                  type: string
+                  enum: [usd, eur, gbp]
+                customer_id:
+                  type: string
+                capture_method:
+                  type: string
+                  enum: [automatic, manual]
+                  default: automatic
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+  /v1/charges/legacy:
+    post:
+      summary: Create a synchronous card charge (Legacy)
+      operationId: createLegacyCharge
+      responses:
+        '200':
+          description: Charge succeeded
+  /v1/customers/{customer_id}:
+    get:
+      summary: Retrieve customer profile
+      operationId: getCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer details
+components:
+  schemas:
+    Payment:
+      type: object
+      required:
+        - id
+        - status
+        - amount
+        - currency
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [requires_payment_method, processing, succeeded, canceled]
+        amount:
+          type: integer
+        currency:
+          type: string

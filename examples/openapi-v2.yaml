@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Acme Payments API
+  version: 2026.10.30
+  description: Core payment processing, multi-currency settlements, refunds, and webhook event management API.
+servers:
+  - url: https://api.acmepayments.dev
+paths:
+  /v1/payments:
+    post:
+      summary: Create a payment intent with idempotency and multi-currency settlement
+      operationId: createPayment
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: BREAKING - Idempotency-Key header is now strictly required on all POST /v1/payments calls.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+                - payment_method_types
+              properties:
+                amount:
+                  type: integer
+                  description: Amount in smallest currency unit (e.g., cents).
+                currency:
+                  type: string
+                  enum: [usd, eur, gbp, jpy, cad, aud]
+                payment_method_types:
+                  type: array
+                  items:
+                    type: string
+                    enum: [card, sepa_debit, us_bank_account, apple_pay]
+                customer_id:
+                  type: string
+                settlement_currency:
+                  type: string
+                  description: Optional target currency for automatic FX settlement.
+                capture_method:
+                  type: string
+                  enum: [automatic, manual, automatic_async]
+                  default: automatic
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+  /v1/payouts/instant:
+    post:
+      summary: Trigger an instant real-time RTP/FedNow merchant payout
+      operationId: createInstantPayout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - destination_account_id
+                - amount
+              properties:
+                destination_account_id:
+                  type: string
+                amount:
+                  type: integer
+                rail:
+                  type: string
+                  enum: [rtp, fednow, sepa_instant]
+      responses:
+        '202':
+          description: Instant payout queued for settlement
+  /v1/charges/legacy:
+    post:
+      deprecated: true
+      summary: Create a synchronous card charge (Deprecated - migrate to /v1/payments)
+      operationId: createLegacyCharge
+      responses:
+        '200':
+          description: Charge succeeded
+  /v1/customers/{customer_id}:
+    get:
+      summary: Retrieve customer profile with treasury risk score
+      operationId: getCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: expand_risk_profile
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Customer details
+components:
+  schemas:
+    Payment:
+      type: object
+      required:
+        - id
+        - status
+        - amount
+        - currency
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [requires_payment_method, processing, requires_capture, succeeded, canceled]
+        amount:
+          type: integer
+        currency:
+          type: string
+        fx_quote_id:
+          type: string
