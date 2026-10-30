@@ -67,11 +67,16 @@ export default async function HomePage() {
 
           <div className="flex items-center gap-2.5">
             <Link
-              href="/acme-payments"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2 text-xs font-medium text-zinc-200 hover:border-zinc-700 hover:text-white transition-colors"
+              href="/login"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2 text-xs font-medium text-zinc-200 hover:border-zinc-700 hover:text-white transition-colors"
             >
-              <span>Public Portal</span>
-              <ArrowUpRight className="h-3.5 w-3.5 text-zinc-400" />
+              <span>Log In</span>
+            </Link>
+            <Link
+              href="/register"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-indigo-500/15 px-3.5 py-2 text-xs font-semibold text-indigo-200 hover:bg-indigo-500/25 transition-colors"
+            >
+              <span>Register</span>
             </Link>
             <Link
               href="/dashboard"

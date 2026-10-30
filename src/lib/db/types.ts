@@ -61,7 +61,19 @@ export interface ChangelogEntry {
   version_tag: string | null;
 }
 
+export interface UserAccount {
+  id: string;
+  email: string;
+  full_name: string;
+  role: "admin" | "member";
+  organization_id: string;
+  password_hash?: string;
+  avatar_initials?: string;
+  created_at: string;
+}
+
 export interface SpecSyncDatabaseSchema {
+  users?: UserAccount[];
   organizations: Organization[];
   organization_members: OrganizationMember[];
   projects: Project[];

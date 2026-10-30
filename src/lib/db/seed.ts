@@ -7,6 +7,26 @@ import {
 import { SpecSyncDatabaseSchema } from "@/lib/db/types";
 
 export const INITIAL_SEED_DATA: SpecSyncDatabaseSchema = {
+  users: [
+    {
+      id: "00000000-0000-4000-8000-000000000001",
+      email: "founder@difflog.dev",
+      full_name: "Aman Jain",
+      role: "admin",
+      organization_id: "11111111-1111-4111-8111-111111111111",
+      avatar_initials: "AJ",
+      created_at: "2026-09-01T10:00:00.000Z",
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000002",
+      email: "devrel@acmepayments.dev",
+      full_name: "Sarah Chen",
+      role: "member",
+      organization_id: "11111111-1111-4111-8111-111111111111",
+      avatar_initials: "SC",
+      created_at: "2026-09-12T15:20:00.000Z",
+    },
+  ],
   organizations: [
     {
       id: "11111111-1111-4111-8111-111111111111",

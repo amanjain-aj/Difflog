@@ -10,6 +10,7 @@ import {
   Project,
   SpecSyncDatabaseSchema,
   StructuredChangeItem,
+  UserAccount,
 } from "@/lib/db/types";
 import { generateProjectApiKey, hashApiKey } from "@/lib/crypto/api-keys";
 
@@ -390,4 +391,213 @@ export async function deleteChangelogEntry(entryId: string): Promise<boolean> {
 
 export function getStorageMode(): "supabase" | "local-json" {
   return isSupabaseConfigured() ? "supabase" : "local-json";
+}
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase() || "DL";
+}
+
+export async function listUsers(): Promise<UserAccount[]> {
+  const db = readLocalDb();
+  if (!db.users || db.users.length === 0) {
+    db.users = structuredClone(INITIAL_SEED_DATA.users || []);
+    writeLocalDb(db);
+  }
+  return db.users;
+}
+
+export async function getUserById(userId: string): Promise<UserAccount | null> {
+  const users = await listUsers();
+  return users.find((u) => u.id === userId) || null;
+}
+
+export async function getUserByEmail(
+  email: string
+): Promise<UserAccount | null> {
+  const normalized = email.trim().toLowerCase();
+  const users = await listUsers();
+  return users.find((u) => u.email.toLowerCase() === normalized) || null;
+}
+
+export async function registerUserAccount(input: {
+  email: string;
+  full_name: string;
+  password?: string;
+  organization_name?: string;
+}): Promise<{ user: UserAccount; organization: Organization }> {
+  const normalizedEmail = input.email.trim().toLowerCase();
+  const db = readLocalDb();
+  if (!db.users) {
+    db.users = structuredClone(INITIAL_SEED_DATA.users || []);
+  }
+
+  const existing = db.users.find(
+    (u) => u.email.toLowerCase() === normalizedEmail
+  );
+  if (existing) {
+    throw new Error("An account with this email address already exists.");
+  }
+
+  let org = db.organizations[0];
+  if (input.organization_name && input.organization_name.trim() !== "") {
+    org.name = input.organization_name.trim();
+    org.updated_at = new Date().toISOString();
+  }
+
+  const passwordHash = input.password
+    ? hashApiKey(`difflog_pwd_${input.password}`)
+    : undefined;
+
+  const newUser: UserAccount = {
+    id: crypto.randomUUID(),
+    email: normalizedEmail,
+    full_name: input.full_name.trim(),
+    role: "admin",
+    organization_id: org.id,
+    password_hash: passwordHash,
+    avatar_initials: getInitials(input.full_name),
+    created_at: new Date().toISOString(),
+  };
+
+  db.users.unshift(newUser);
+  db.organization_members.push({
+    id: crypto.randomUUID(),
+    organization_id: org.id,
+    user_id: newUser.id,
+    role: "admin",
+    created_at: new Date().toISOString(),
+  });
+
+  writeLocalDb(db);
+  return { user: newUser, organization: org };
+}
+
+export async function authenticateUserAccount(input: {
+  email: string;
+  password?: string;
+}): Promise<{ user: UserAccount; organization: Organization }> {
+  const normalizedEmail = input.email.trim().toLowerCase();
+  const db = readLocalDb();
+  if (!db.users || db.users.length === 0) {
+    db.users = structuredClone(INITIAL_SEED_DATA.users || []);
+    writeLocalDb(db);
+  }
+
+  const user = db.users.find((u) => u.email.toLowerCase() === normalizedEmail);
+  if (!user) {
+    throw new Error(
+      "No DiffLog account found with that email. Register a new account or sign in with founder@difflog.dev."
+    );
+  }
+
+  if (user.password_hash && input.password) {
+    const candidateHash = hashApiKey(`difflog_pwd_${input.password}`);
+    if (candidateHash !== user.password_hash) {
+      throw new Error("Invalid password for this account.");
+    }
+  }
+
+  const organization =
+    db.organizations.find((o) => o.id === user.organization_id) ||
+    db.organizations[0];
+
+  return { user, organization };
+}
+
+export async function updateUserProfile(input: {
+  userId: string;
+  full_name?: string;
+  email?: string;
+  role?: "admin" | "member";
+  organization_name?: string;
+}): Promise<{ user: UserAccount; organization: Organization } | null> {
+  const db = readLocalDb();
+  if (!db.users) {
+    db.users = structuredClone(INITIAL_SEED_DATA.users || []);
+  }
+  const user = db.users.find((u) => u.id === input.userId);
+  if (!user) return null;
+
+  if (input.full_name && input.full_name.trim()) {
+    user.full_name = input.full_name.trim();
+    user.avatar_initials = getInitials(user.full_name);
+  }
+  if (input.email && input.email.trim()) {
+    user.email = input.email.trim().toLowerCase();
+  }
+  if (input.role) {
+    user.role = input.role;
+  }
+
+  const org =
+    db.organizations.find((o) => o.id === user.organization_id) ||
+    db.organizations[0];
+  if (input.organization_name && input.organization_name.trim()) {
+    org.name = input.organization_name.trim();
+    org.updated_at = new Date().toISOString();
+  }
+
+  writeLocalDb(db);
+  return { user, organization: org };
+}
+
+export async function inviteOrganizationMember(input: {
+  email: string;
+  full_name: string;
+  role: "admin" | "member";
+}): Promise<UserAccount> {
+  const db = readLocalDb();
+  if (!db.users) {
+    db.users = structuredClone(INITIAL_SEED_DATA.users || []);
+  }
+  const normalizedEmail = input.email.trim().toLowerCase();
+  const existing = db.users.find(
+    (u) => u.email.toLowerCase() === normalizedEmail
+  );
+  if (existing) {
+    throw new Error("A team member with this email is already in the organization.");
+  }
+
+  const org = db.organizations[0];
+  const member: UserAccount = {
+    id: crypto.randomUUID(),
+    email: normalizedEmail,
+    full_name: input.full_name.trim(),
+    role: input.role,
+    organization_id: org.id,
+    avatar_initials: getInitials(input.full_name),
+    created_at: new Date().toISOString(),
+  };
+
+  db.users.push(member);
+  db.organization_members.push({
+    id: crypto.randomUUID(),
+    organization_id: org.id,
+    user_id: member.id,
+    role: input.role,
+    created_at: new Date().toISOString(),
+  });
+  writeLocalDb(db);
+  return member;
+}
+
+export async function removeOrganizationMember(userId: string): Promise<boolean> {
+  const db = readLocalDb();
+  if (!db.users || db.users.length <= 1) {
+    return false;
+  }
+  const prevLen = db.users.length;
+  db.users = db.users.filter((u) => u.id !== userId);
+  db.organization_members = db.organization_members.filter(
+    (m) => m.user_id !== userId
+  );
+  if (db.users.length !== prevLen) {
+    writeLocalDb(db);
+    return true;
+  }
+  return false;
 }
