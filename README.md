@@ -230,7 +230,7 @@ Because Vercel serverless functions have an ephemeral filesystem, deploying to p
 git add .
 git commit -m "feat: initial DiffLog MVP platform"
 git branch -M main
-git remote add origin https://github.com/<your-org>/<your-repo>.git
+git remote add origin https://github.com/amanjain-aj/Difflog.git
 git push -u origin main
 ```
 
@@ -287,7 +287,7 @@ If using live Stripe Billing:
              fetch-depth: 2
 
          - name: Run DiffLog OpenAPI Diff & Ingest
-           uses: <your-org>/<your-repo>@main
+           uses: amanjain-aj/Difflog@main
            with:
              api_key: ${{ secrets.DIFFLOG_API_KEY }}
              spec_path: "openapi.yaml"

@@ -187,7 +187,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: Run DiffLog OpenAPI Diff & Ingest
-        uses: difflog/action@v1
+        uses: amanjain-aj/Difflog@main
         with:
           api_key: \${{ secrets.DIFFLOG_API_KEY }}
           spec_path: "openapi.yaml"

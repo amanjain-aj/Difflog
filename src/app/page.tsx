@@ -167,7 +167,7 @@ export default async function HomePage() {
                 </div>
                 <pre className="overflow-x-auto rounded-xl border border-zinc-800 bg-[#06070B] p-4 font-mono text-xs leading-relaxed text-zinc-300">
 {`- name: DiffLog OpenAPI Diff & Changelog
-  uses: difflog/action@v1
+  uses: amanjain-aj/Difflog@main
   with:
     api_key: \${{ secrets.DIFFLOG_API_KEY }}
     spec_path: "openapi.yaml"
